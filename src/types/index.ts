@@ -6,6 +6,40 @@ export interface User {
   profile_pic: string;
   created_at: string;
   last_login: string;
+  total_points?: number;
+  streak_days?: number;
+  quizzes_taken?: number;
+  avg_score?: number;
+  total_time?: number;
+  auth_provider?: 'google' | 'microsoft' | 'facebook' | 'email';
+}
+
+export interface Achievement {
+  achievement_id: string;
+  name: string;
+  description: string;
+  icon: string;
+  requirement: number;
+  category: 'completion' | 'score' | 'speed' | 'streak' | 'points' | 'category';
+}
+
+export interface UserAchievement {
+  user_id: string;
+  achievement_id: string;
+  earned_date: string;
+  progress: number;
+}
+
+export interface GamificationStats {
+  total_points: number;
+  streak_days: number;
+  last_quiz_date: string;
+  achievements_earned: string[];
+  next_milestone: {
+    name: string;
+    progress: number;
+    required: number;
+  };
 }
 
 export interface Quiz {

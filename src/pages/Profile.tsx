@@ -1,17 +1,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
-import { Settings, Mail, Key, Bell, Shield, LogOut } from 'lucide-react';
+import { useUserStats, useUserAchievements } from '../hooks/useFirestore';
+import BadgeDisplay from '../components/BadgeDisplay';
+import PointsDisplay from '../components/PointsDisplay';
+import { Settings, Mail, Key, Bell, Shield, LogOut, Trophy } from 'lucide-react';
 
 const Profile = () => {
   const { user, logout } = useAuthStore();
+  const { stats, loading: statsLoading } = useUserStats(user?.user_id || null);
+  const { achievements, loading: achievementsLoading } = useUserAchievements(user?.user_id || null);
 
-  const achievements = [
-    { name: 'Quiz Master', description: 'Complete 50 quizzes', progress: 80 },
-    { name: 'Perfect Score', description: 'Get 100% in any quiz', progress: 60 },
-    { name: 'Speed Demon', description: 'Complete a quiz in record time', progress: 40 },
-    { name: 'Consistent Learner', description: 'Study for 7 days in a row', progress: 90 },
+  const allAchievements = [
+    { name: 'Quiz Master', icon: '🎓', earned: achievements.some(a => a.achievement_id === 'quiz_master'), progress: 0.8 },
+    { name: 'Perfect Score', icon: '💯', earned: achievements.some(a => a.achievement_id === 'perfect_score'), progress: 0.6 },
+    { name: 'Speed Demon', icon: '⚡', earned: achievements.some(a => a.achievement_id === 'speed_demon'), progress: 0.4 },
+    { name: 'Consistent Learner', icon: '📖', earned: achievements.some(a => a.achievement_id === 'consistent'), progress: 0.9 },
+    { name: 'Rising Star', icon: '🌟', earned: achievements.some(a => a.achievement_id === 'rising_star'), progress: 0.5 },
+    { name: 'Ultimate Learner', icon: '🏆', earned: achievements.some(a => a.achievement_id === 'ultimate'), progress: 0.3 },
   ];
+
+  const displayStats = statsLoading
+    ? { total_points: 0, streak_days: 0, quizzes_taken: 0, avg_score: 0 }
+    : stats || { total_points: 0, streak_days: 0, quizzes_taken: 0, avg_score: 0 };
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
