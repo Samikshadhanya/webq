@@ -31,27 +31,37 @@ const Profile = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-4xl mx-auto space-y-8"
       >
-        <div className="bg-dark-200 rounded-lg p-6 border border-dark-100">
+        <div className="bg-gradient-to-r from-dark-200 to-dark-100 rounded-lg p-6 border border-primary-400/30">
           <div className="flex flex-col md:flex-row items-center gap-6">
-            <img
-              src={user?.profile_pic}
+            <motion.img
+              src={user?.profile_pic || 'https://via.placeholder.com/128'}
               alt={user?.name}
               className="w-32 h-32 rounded-full border-4 border-primary-400"
+              whileHover={{ scale: 1.1 }}
             />
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-2xl font-bold">{user?.name}</h1>
-              <p className="text-gray-400">{user?.email}</p>
-              <p className="text-sm text-gray-400 mt-2">Member since {new Date(user?.created_at || '').toLocaleDateString()}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-primary-400/20 text-primary-400">
-                  Quiz Master
-                </span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-400/20 text-purple-400">
-                  Top 10%
-                </span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-400/20 text-green-400">
-                  Active Learner
-                </span>
+            <div className="flex-1">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div className="text-center md:text-left mb-4 md:mb-0">
+                  <h1 className="text-3xl font-bold">{user?.name}</h1>
+                  <p className="text-gray-400">{user?.email}</p>
+                  <p className="text-sm text-gray-400 mt-1">Member since {new Date(user?.created_at || '').toLocaleDateString()}</p>
+                </div>
+                <PointsDisplay points={displayStats.total_points} size="lg" />
+              </div>
+              
+              <div className="grid grid-cols-3 gap-3 mt-4">
+                <div className="p-3 bg-dark-300 rounded-lg border border-dark-100 text-center">
+                  <p className="text-2xl font-bold text-primary-400">{displayStats.quizzes_taken}</p>
+                  <p className="text-xs text-gray-400 mt-1">Quizzes</p>
+                </div>
+                <div className="p-3 bg-dark-300 rounded-lg border border-dark-100 text-center">
+                  <p className="text-2xl font-bold text-green-400">{Math.round(displayStats.avg_score || 0)}%</p>
+                  <p className="text-xs text-gray-400 mt-1">Avg Score</p>
+                </div>
+                <div className="p-3 bg-dark-300 rounded-lg border border-dark-100 text-center">
+                  <p className="text-2xl font-bold text-yellow-400">{displayStats.streak_days}</p>
+                  <p className="text-xs text-gray-400 mt-1">Streak</p>
+                </div>
               </div>
             </div>
           </div>
@@ -113,27 +123,35 @@ const Profile = () => {
             transition={{ delay: 0.3 }}
             className="space-y-4"
           >
-            <h2 className="text-xl font-bold">Achievements</h2>
-            <div className="space-y-4">
-              {achievements.map((achievement, index) => (
-                <div
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Trophy className="w-6 h-6 text-primary-400" />
+              Achievements
+            </h2>
+            <div className="grid grid-cols-2 gap-3">
+              {allAchievements.map((achievement, index) => (
+                <motion.div
                   key={achievement.name}
-                  className="p-4 bg-dark-200 rounded-lg border border-dark-100"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  className={`p-4 rounded-lg border text-center ${
+                    achievement.earned
+                      ? 'bg-primary-500/20 border-primary-400'
+                      : 'bg-dark-300 border-dark-100 opacity-60'
+                  }`}
                 >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-semibold">{achievement.name}</h3>
-                    <span className="text-sm text-primary-400">{achievement.progress}%</span>
-                  </div>
-                  <p className="text-sm text-gray-400 mb-3">{achievement.description}</p>
-                  <div className="w-full bg-dark-300 rounded-full h-2">
+                  <div className="text-2xl mb-2">{achievement.icon}</div>
+                  <h3 className="font-semibold text-sm">{achievement.name}</h3>
+                  <div className="mt-2 w-full bg-dark-300 rounded-full h-1.5">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: `${achievement.progress}%` }}
+                      animate={{ width: `${achievement.progress * 100}%` }}
                       transition={{ delay: 0.5 + index * 0.1, duration: 1 }}
-                      className="bg-primary-400 h-2 rounded-full"
+                      className={achievement.earned ? 'bg-primary-400 h-1.5 rounded-full' : 'bg-gray-500 h-1.5 rounded-full'}
                     />
                   </div>
-                </div>
+                  <p className="text-xs text-gray-400 mt-1">{Math.round(achievement.progress * 100)}%</p>
+                </motion.div>
               ))}
             </div>
           </motion.div>

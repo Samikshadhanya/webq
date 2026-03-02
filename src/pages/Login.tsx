@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogIn, Mail, Lock } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, googleProvider, microsoftProvider, facebookProvider } from "../firebase";
+import { auth, googleProvider } from "../firebase";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -56,33 +56,7 @@ const Login = () => {
     }
   };
 
-  const handleMicrosoftLogin = async () => {
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, microsoftProvider);
-      setUser(formatUser(result.user, 'microsoft'));
-      navigate('/');
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message || "Microsoft login failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleFacebookLogin = async () => {
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      setUser(formatUser(result.user, 'facebook'));
-      navigate('/');
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message || "Facebook login failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -144,7 +118,7 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-6">
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
@@ -157,28 +131,6 @@ const Login = () => {
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
               {loading ? "Processing..." : "Sign in with Google"}
-            </button>
-
-            <button
-              onClick={handleMicrosoftLogin}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-dark-300 hover:bg-dark-100 disabled:opacity-60 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 border border-dark-100"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" fill="currentColor"/>
-              </svg>
-              {loading ? "Processing..." : "Sign in with Microsoft"}
-            </button>
-
-            <button
-              onClick={handleFacebookLogin}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-dark-300 hover:bg-dark-100 disabled:opacity-60 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 border border-dark-100"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
-              </svg>
-              {loading ? "Processing..." : "Sign in with Facebook"}
             </button>
           </div>
         </div>

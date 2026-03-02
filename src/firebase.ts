@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, OAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 
@@ -20,13 +20,7 @@ export const storage = getStorage(app);
 
 // OAuth Providers
 export const googleProvider = new GoogleAuthProvider();
-export const microsoftProvider = new OAuthProvider("microsoft.com");
-export const facebookProvider = new FacebookAuthProvider();
 
 // Configure scopes for better user data
 googleProvider.addScope("profile");
 googleProvider.addScope("email");
-microsoftProvider.addScope("profile");
-microsoftProvider.addScope("email");
-facebookProvider.addScope("email");
-facebookProvider.addScope("public_profile");
