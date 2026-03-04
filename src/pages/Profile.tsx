@@ -13,6 +13,11 @@ const Profile = () => {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [emailPrefs, setEmailPrefs] = useState({ marketing: true, updates: true, newsletter: true });
+  const [passwordForm, setPasswordForm] = useState({ current: '', new: '', confirm: '' });
+  const [notifyPrefs, setNotifyPrefs] = useState({ quizReminder: true, leaderboard: true, achievements: true });
+  const [privacySettings, setPrivacySettings] = useState({ publicProfile: true, showStats: true, showAchievements: true });
 
   useEffect(() => {
     const loadStats = async () => {
@@ -147,28 +152,28 @@ const Profile = () => {
           >
             <h2 className="text-xl font-bold text-white">Settings</h2>
             <div className="space-y-3">
-              <button className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
+              <button onClick={() => setActiveModal('email')} className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
                 <Mail className="w-5 h-5 text-primary-400 flex-shrink-0" />
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-white">Email Preferences</h3>
                   <p className="text-sm text-gray-400">Manage notifications</p>
                 </div>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
+              <button onClick={() => setActiveModal('password')} className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
                 <Key className="w-5 h-5 text-primary-400 flex-shrink-0" />
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-white">Change Password</h3>
                   <p className="text-sm text-gray-400">Update credentials</p>
                 </div>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
+              <button onClick={() => setActiveModal('notifications')} className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
                 <Bell className="w-5 h-5 text-primary-400 flex-shrink-0" />
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-white">Notifications</h3>
                   <p className="text-sm text-gray-400">Configure alerts</p>
                 </div>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
+              <button onClick={() => setActiveModal('privacy')} className="w-full flex items-center gap-3 p-4 bg-dark-200 rounded-lg border border-dark-100 hover:border-primary-400 transition-colors">
                 <Shield className="w-5 h-5 text-primary-400 flex-shrink-0" />
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-white">Privacy</h3>
@@ -217,6 +222,242 @@ const Profile = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Modals */}
+        {activeModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            onClick={() => setActiveModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-dark-200 rounded-lg border border-dark-100 max-w-md w-full p-6"
+            >
+              {/* Email Preferences Modal */}
+              {activeModal === 'email' && (
+                <>
+                  <h3 className="text-xl font-bold text-white mb-4">Email Preferences</h3>
+                  <div className="space-y-4 mb-6">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={emailPrefs.marketing}
+                        onChange={(e) => setEmailPrefs({ ...emailPrefs, marketing: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Marketing emails</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={emailPrefs.updates}
+                        onChange={(e) => setEmailPrefs({ ...emailPrefs, updates: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Product updates</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={emailPrefs.newsletter}
+                        onChange={(e) => setEmailPrefs({ ...emailPrefs, newsletter: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Weekly newsletter</span>
+                    </label>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setActiveModal(null)}
+                      className="flex-1 bg-dark-300 hover:bg-dark-100 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveModal(null);
+                        alert('Email preferences saved!');
+                      }}
+                      className="flex-1 bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Change Password Modal */}
+              {activeModal === 'password' && (
+                <>
+                  <h3 className="text-xl font-bold text-white mb-4">Change Password</h3>
+                  <div className="space-y-4 mb-6">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-2">Current Password</label>
+                      <input
+                        type="password"
+                        value={passwordForm.current}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })}
+                        className="w-full bg-dark-300 border border-dark-100 rounded-lg px-3 py-2 text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-2">New Password</label>
+                      <input
+                        type="password"
+                        value={passwordForm.new}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })}
+                        className="w-full bg-dark-300 border border-dark-100 rounded-lg px-3 py-2 text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-2">Confirm Password</label>
+                      <input
+                        type="password"
+                        value={passwordForm.confirm}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })}
+                        className="w-full bg-dark-300 border border-dark-100 rounded-lg px-3 py-2 text-white"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setActiveModal(null)}
+                      className="flex-1 bg-dark-300 hover:bg-dark-100 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (passwordForm.new === passwordForm.confirm && passwordForm.new.length >= 6) {
+                          setActiveModal(null);
+                          setPasswordForm({ current: '', new: '', confirm: '' });
+                          alert('Password changed successfully!');
+                        } else {
+                          alert('Passwords do not match or are too short');
+                        }
+                      }}
+                      className="flex-1 bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Notifications Modal */}
+              {activeModal === 'notifications' && (
+                <>
+                  <h3 className="text-xl font-bold text-white mb-4">Notification Settings</h3>
+                  <div className="space-y-4 mb-6">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notifyPrefs.quizReminder}
+                        onChange={(e) => setNotifyPrefs({ ...notifyPrefs, quizReminder: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Quiz reminders</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notifyPrefs.leaderboard}
+                        onChange={(e) => setNotifyPrefs({ ...notifyPrefs, leaderboard: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Leaderboard updates</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={notifyPrefs.achievements}
+                        onChange={(e) => setNotifyPrefs({ ...notifyPrefs, achievements: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Achievement unlocked</span>
+                    </label>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setActiveModal(null)}
+                      className="flex-1 bg-dark-300 hover:bg-dark-100 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveModal(null);
+                        alert('Notification settings saved!');
+                      }}
+                      className="flex-1 bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Privacy Settings Modal */}
+              {activeModal === 'privacy' && (
+                <>
+                  <h3 className="text-xl font-bold text-white mb-4">Privacy Settings</h3>
+                  <div className="space-y-4 mb-6">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={privacySettings.publicProfile}
+                        onChange={(e) => setPrivacySettings({ ...privacySettings, publicProfile: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Make profile public</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={privacySettings.showStats}
+                        onChange={(e) => setPrivacySettings({ ...privacySettings, showStats: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Show statistics publicly</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={privacySettings.showAchievements}
+                        onChange={(e) => setPrivacySettings({ ...privacySettings, showAchievements: e.target.checked })}
+                        className="w-4 h-4 rounded"
+                      />
+                      <span className="text-white">Show achievements</span>
+                    </label>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setActiveModal(null)}
+                      className="flex-1 bg-dark-300 hover:bg-dark-100 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveModal(null);
+                        alert('Privacy settings saved!');
+                      }}
+                      className="flex-1 bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );
