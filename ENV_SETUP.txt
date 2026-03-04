@@ -1,0 +1,114 @@
+================================================================================
+ENVIRONMENT VARIABLES SETUP - Copy and Paste These into Vercel
+================================================================================
+
+STEP 1: Get your Neon Connection String
+----------------------------------------
+1. Go to https://neon.tech and sign up (FREE)
+2. Create a new project
+3. Go to "Connection" tab
+4. Select "Pooled connection" from dropdown
+5. Copy the entire connection string
+
+Your connection string will look like:
+postgresql://user:password@ep-xxxxx.region.neon.tech/database?sslmode=require&connection_limit=1
+
+STEP 2: Add These Environment Variables to Vercel
+--------------------------------------------------
+
+Go to: Vercel Dashboard → Your Project → Settings → Environment Variables
+
+Add the following (copy the template below):
+
+================================================================================
+VARIABLE 1: POSTGRES_PRISMA_URL
+================================================================================
+Name: POSTGRES_PRISMA_URL
+Value: [PASTE YOUR NEON CONNECTION STRING HERE]
+Environments: Production, Preview, Development (select all)
+
+Example value:
+postgresql://user:password@ep-xxxxx.region.neon.tech/database?sslmode=require&connection_limit=1
+
+================================================================================
+VARIABLE 2: POSTGRES_URL_NON_POOLING
+================================================================================
+Name: POSTGRES_URL_NON_POOLING
+Value: [PASTE THE SAME NEON CONNECTION STRING HERE]
+Environments: Production, Preview, Development (select all)
+
+(Use the same connection string as POSTGRES_PRISMA_URL)
+
+================================================================================
+VARIABLE 3: JWT_SECRET
+================================================================================
+Name: JWT_SECRET
+Value: quiz-master-super-secret-key-2024-change-in-production
+Environments: Production, Preview, Development (select all)
+
+(This is used for authentication - change this in production!)
+
+================================================================================
+
+STEP 3: Save Environment Variables
+-----------------------------------
+1. Click "Save" after adding each variable
+2. Redeploy your project (should happen automatically)
+3. Wait 2-3 minutes for build and deployment
+
+STEP 4: Verify Deployment
+--------------------------
+1. Go to "Deployments" tab
+2. Wait for "READY" status (usually 2-3 minutes)
+3. Click the URL to visit your live app
+4. Click "Sign Up" to create an account
+5. Take a quiz!
+
+================================================================================
+QUICK CHECKLIST
+================================================================================
+
+☐ Created Neon account (https://neon.tech)
+☐ Created Neon project
+☐ Copied connection string from "Pooled connection"
+☐ Added POSTGRES_PRISMA_URL to Vercel
+☐ Added POSTGRES_URL_NON_POOLING to Vercel
+☐ Added JWT_SECRET to Vercel
+☐ Deployment completed (status = READY)
+☐ Visited live URL and created account
+☐ Took a quiz successfully!
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+❌ "Connection refused"
+→ Check your connection string is correct
+→ Make sure Neon project is active
+→ Re-deploy after adding env vars
+
+❌ "Database does not exist"
+→ Wait 1-2 minutes, then refresh
+→ Visit /api/init endpoint to trigger initialization
+
+❌ "Can't sign up or login"
+→ Check JWT_SECRET is set
+→ Check all three env vars are present
+→ Re-deploy project
+
+❌ "Build failed"
+→ Check all env variables are set (no typos)
+→ Check Neon connection string format
+→ Re-deploy from Vercel dashboard
+
+================================================================================
+YOUR LIVE URL WILL BE:
+================================================================================
+
+https://[your-vercel-project-name].vercel.app
+
+(You'll get this URL after successful deployment)
+
+Share this with users to start taking quizzes!
+
+================================================================================
