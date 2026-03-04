@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build",
+  "framework": "nextjs",
+  "env": [
+    {
+      "key": "JWT_SECRET",
+      "value": "your-secret-key-change-this-in-production",
+      "type": "secret"
+    }
+  ]
+}
